@@ -34,9 +34,19 @@
     height:40%;
     border: 1px solid;
     margin-top: 1rem;
-    padding: 1rem;
+    padding: 2rem;
 
-    overflow: scroll;
+    overflow: auto;
+  }
+
+  .chat-box li{
+    list-style: none;
+    margin: 0.1rem;
+  }
+
+  .chat-box li span{
+    font-weight: bolder;
+    font-style: italic;
   }
 
   .send-message{
@@ -77,8 +87,9 @@
     }
       .chat-box{
         width:95%;
+        padding: 0.3rem;
       }
-
+      
       .send-message{
         width:100%;
       }
@@ -144,8 +155,10 @@
         }
         
         let item = document.createElement('li');
-        item.textContent = msg;
+        item.innerHTML = `<span>${ msg.toString().split(':')[0]}</span>:  ${msg.toString().split(':').splice(1,msg.toString().split(':').length)}`;
         chatBox.appendChild(item);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        chatBox.animate({scrollTop: chatBox.scrollHeight});
       })
 
       // sending message
