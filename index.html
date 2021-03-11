@@ -25,17 +25,22 @@
     padding: 3rem;
   }
 
-  .chat-box{
-    width: 50%;
-    height:40%;
-    border: 1px solid black;
+  .push{
+    flex-grow: 1;
+  }
 
+  .chat-box{
+    width: 70%;
+    height:40%;
+    border: 1px solid;
+    margin-top: 1rem;
     padding: 1rem;
 
     overflow: scroll;
   }
 
-  .message{
+  .send-message{
+    width:60%;
     margin: 2rem;
   }
 
@@ -43,10 +48,48 @@
     padding: 0.5rem;
   }
 
-  button{
+  #message{
+    width:100%;
+  }
+
+  .send-message-section{
+    margin: 0.3rem;
+  }
+
+  #btn-send{
     padding: 0.5rem;
   }
+
+  footer{
+    background-color:rgb(231, 222, 222);
+    width: 100%;
+    padding: 1rem;
+    text-align:center;
+  }
+
+  @media only screen and (max-width: 550px ) {
+    body{
+      padding: 0.2rem;
+    }
+
+    h1{
+      text-align: center;
+    }
+      .chat-box{
+        width:95%;
+      }
+
+      .send-message{
+        width:100%;
+      }
+      #message{
+        width:95%;
+      }
+    
+  }
 </style>
+
+
 
 <body>
     <h1>The Ultimate ChatRoom</h1>
@@ -54,17 +97,25 @@
 
     <div class="chat-box"></div>
 
-    <div class="message">
-      <button id="btn-send">Send</button>
-      <input id="username" type="text" value="anonymous user" >
+    <div class="send-message">
       <input id="message" type="text" placeholder="Type your message">
+
+      <div class="send-message-section">
+        <button id="btn-send">Send</button>
+        <input id="username" type="text" value="anonymous user" placeholder="User Name">
+      </div>
     </div>
     
     <p>Change anonymous user to your preferred UserName</p>
 
+    <div class="push"></div>
+    <footer>
+      <p>Sait &copy; Web Dev 2021</p>
+    </footer>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      const body = document.querySelector('body');
       const chatBox = document.querySelector('.chat-box');
       const userName = document.querySelector('#username');
       const message = document.querySelector('#message');
@@ -72,16 +123,48 @@
       
       let socket = io();
 
+      message.addEventListener('keypress',(e)=>{
+        if(e.code == 'Enter'){
+          send(userName.value,message.value);
+          message.value = '';
+        }
+      })
+
       btnSend.addEventListener('click',()=>{
-        socket.emit('chat message', `${userName.value} - ${message.value}`);
+        send(userName.value,message.value)
         message.value = '';
       })
 
+      // recieving message
       socket.on('chat message',(msg)=>{
+        const set = msg.toString().split(':');
+
+        if (set.length >= 3){ 
+          changeColor(set[0] ,set[1], set[2]);
+        }
+        
         let item = document.createElement('li');
         item.textContent = msg;
         chatBox.appendChild(item);
       })
+
+      // sending message
+      const send = (userName, message)=>{
+        socket.emit('chat message', `${userName}: ${message}`);
+      }
+
+    // change color
+      const changeColor = (el,attrb,value) => {
+        switch(el){
+
+          case 'body':
+            body.bgColor = value.trim();
+            break;
+
+          default:
+            break;   
+        }
+      }
 
 
   </script>

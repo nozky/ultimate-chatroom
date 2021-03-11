@@ -1,5 +1,10 @@
-# Documentation soon...
+# The Ultimate ChatRoom
 
+
+I am just having fun :)
+
+### Attribution
+Read more: [https://socket.io/](https://socket.io/)
 
 ---
 ### Link
